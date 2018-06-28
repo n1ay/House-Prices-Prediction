@@ -29,7 +29,7 @@ def build_feature_encoders():
         'Exterior2nd': LabelEncoder().fit(['AsbShng', 'AsphShn', 'Brk Cmn', 'BrkFace', 'CBlock', 'CmentBd', 'HdBoard',
                                            'ImStucc', 'MetalSd', 'Other', 'Plywood', 'PreCast', 'Stone', 'Stucco',
                                            'VinylSd', 'Wd Sdng', 'Wd Shng']),
-        'MasVnrType': LabelEncoder().fit(['BrkCmn', 'BrkFace', 'CBlock', 'nan', 'Stone']),
+        'MasVnrType': LabelEncoder().fit(['BrkCmn', 'BrkFace', 'CBlock', 'None', 'Stone', 'nan']),
         'ExterQual': LabelEncoder().fit(['Ex', 'Gd', 'TA', 'Fa', 'Po']),
         'ExterCond': LabelEncoder().fit(['Ex', 'Gd', 'TA', 'Fa', 'Po']),
         'Foundation': LabelEncoder().fit(['BrkTil', 'CBlock', 'PConc', 'Slab', 'Stone', 'Wood']),
@@ -58,7 +58,7 @@ def build_feature_encoders():
     }
 
 def main():
-    df = pd.read_csv('data/train.csv', na_values=['None'])
+    df = pd.read_csv('data/train.csv')
     encoders = build_feature_encoders()
     encoded_df = pd.DataFrame()
     for i in df:
