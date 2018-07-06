@@ -9,13 +9,17 @@ Ask a home buyer to describe their dream house, and they probably won't begin wi
 With 79 explanatory variables describing (almost) every aspect of residential homes in Ames, Iowa, this competition challenges you to predict the final price of each home.
 
 ## My approach
-  - Encoding all non-numeric values to numeric using LabelEncoder
-  - Replacement of all NA/NaN using gaussian random
-  - Normalization (0-1 min-max scaling)
-  - Lasso regulrization and useless parameters pruning
-  - Fitting model with ridge regularization
-  - Prediction of test data
-
+  1. Encoding all non-numeric values to numeric using LabelEncoder
+  2. Replacement of all NA/NaN using gaussian random
+  3. Normalization (0-1 min-max scaling)
+  4. Lasso regulrization and useless parameters pruning
+  5. Fitting model with ridge regularization
+  6. Prediction of test data
+  
+## Possibilities of performance enhancement:
+  - Analyse of error rate
+  - Usage of ensemble learning techniques
+  - Addition of articial features
 
 ## Acknowledgements
 The [Ames Housing dataset](http://www.amstat.org/publications/jse/v19n3/decock.pdf) was compiled by Dean De Cock for use in data science education. It's an incredible alternative for data scientists looking for a modernized and expanded version of the often cited Boston Housing dataset.
