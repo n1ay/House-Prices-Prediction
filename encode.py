@@ -1,14 +1,15 @@
 from sklearn.preprocessing import LabelEncoder
+import pandas as pd
 
 #using LabelEncoder from sklearn
 def build_feature_encoders():
     return {
-        'MSZoning': LabelEncoder().fit(['A', 'C (all)', 'FV', 'I', 'RH', 'RL', 'RP', 'RM']),
+        'MSZoning': LabelEncoder().fit(['A', 'C (all)', 'FV', 'I', 'RH', 'RL', 'RP', 'RM', 'nan']),
         'Street': LabelEncoder().fit(['Grvl', 'Pave']),
         'Alley': LabelEncoder().fit(['Grvl', 'Pave', 'nan']),
         'LotShape': LabelEncoder().fit(['Reg', 'IR1', 'IR2', 'IR3']),
         'LandContour': LabelEncoder().fit(['Lvl', 'Bnk', 'HLS', 'Low']),
-        'Utilities': LabelEncoder().fit(['AllPub', 'NoSewr', 'NoSeWa', 'ELO']),
+        'Utilities': LabelEncoder().fit(['AllPub', 'NoSewr', 'NoSeWa', 'ELO', 'nan']),
         'LotConfig': LabelEncoder().fit(['Inside', 'Corner', 'CulDSac', 'FR2', 'FR3']),
         'LandSlope': LabelEncoder().fit(['Gtl', 'Mod', 'Sev']),
         'Neighborhood': LabelEncoder().fit(['Blmngtn', 'Blueste', 'BrDale', 'BrkSide', 'ClearCr', 'CollgCr',
@@ -23,10 +24,10 @@ def build_feature_encoders():
         'RoofMatl': LabelEncoder().fit(['ClyTile', 'CompShg', 'Membran', 'Metal', 'Roll', 'Tar&Grv', 'WdShake', 'WdShngl']),
         'Exterior1st': LabelEncoder().fit(['AsbShng', 'AsphShn', 'BrkComm', 'BrkFace', 'CBlock', 'CemntBd', 'HdBoard',
                                            'ImStucc', 'MetalSd', 'Other', 'Plywood', 'PreCast', 'Stone', 'Stucco',
-                                           'VinylSd', 'Wd Sdng', 'WdShing']),
+                                           'VinylSd', 'Wd Sdng', 'WdShing', 'nan']),
         'Exterior2nd': LabelEncoder().fit(['AsbShng', 'AsphShn', 'Brk Cmn', 'BrkFace', 'CBlock', 'CmentBd', 'HdBoard',
                                            'ImStucc', 'MetalSd', 'Other', 'Plywood', 'PreCast', 'Stone', 'Stucco',
-                                           'VinylSd', 'Wd Sdng', 'Wd Shng']),
+                                           'VinylSd', 'Wd Sdng', 'Wd Shng', 'nan']),
         'MasVnrType': LabelEncoder().fit(['BrkCmn', 'BrkFace', 'CBlock', 'None', 'Stone', 'nan']),
         'ExterQual': LabelEncoder().fit(['Ex', 'Gd', 'TA', 'Fa', 'Po']),
         'ExterCond': LabelEncoder().fit(['Ex', 'Gd', 'TA', 'Fa', 'Po']),
@@ -40,8 +41,8 @@ def build_feature_encoders():
         'HeatingQC': LabelEncoder().fit(['Ex', 'Gd', 'TA', 'Fa', 'Po']),
         'CentralAir': LabelEncoder().fit(['N', 'Y']),
         'Electrical': LabelEncoder().fit(['SBrkr', 'FuseA', 'FuseF', 'FuseP', 'Mix', 'nan']),
-        'KitchenQual': LabelEncoder().fit(['Ex', 'Gd', 'TA', 'Fa', 'Po']),
-        'Functional': LabelEncoder().fit(['Typ', 'Min1', 'Min2', 'Mod', 'Maj1', 'Maj2', 'Sev', 'Sal']),
+        'KitchenQual': LabelEncoder().fit(['Ex', 'Gd', 'TA', 'Fa', 'Po', 'nan']),
+        'Functional': LabelEncoder().fit(['Typ', 'Min1', 'Min2', 'Mod', 'Maj1', 'Maj2', 'Sev', 'Sal', 'nan']),
         'FireplaceQu': LabelEncoder().fit(['Ex', 'Gd', 'TA', 'Fa', 'Po', 'nan']),
         'GarageType': LabelEncoder().fit(['2Types', 'Attchd', 'Basment', 'BuiltIn', 'CarPort', 'Detchd', 'nan']),
         'GarageFinish': LabelEncoder().fit(['Fin', 'RFn', 'Unf', 'nan']),
@@ -51,6 +52,16 @@ def build_feature_encoders():
         'PoolQC': LabelEncoder().fit(['Ex', 'Gd', 'TA', 'Fa', 'nan']),
         'Fence': LabelEncoder().fit(['GdPrv', 'MnPrv', 'GdWo', 'MnWw', 'nan']),
         'MiscFeature': LabelEncoder().fit(['Elev', 'Gar2', 'Othr', 'Shed', 'TenC', 'nan']),
-        'SaleType': LabelEncoder().fit(['WD', 'CWD', 'VWD', 'New', 'COD', 'Con', 'ConLw', 'ConLI', 'ConLD', 'Oth']),
+        'SaleType': LabelEncoder().fit(['WD', 'CWD', 'VWD', 'New', 'COD', 'Con', 'ConLw', 'ConLI', 'ConLD', 'Oth', 'nan']),
         'SaleCondition': LabelEncoder().fit(['Normal', 'Abnorml', 'AdjLand', 'Alloca', 'Family', 'Partial'])
     }
+
+def encode_df(df, encoders):
+    encoded_df = pd.DataFrame()
+    for i in df:
+        if i in encoders:
+            encoded_df[i] = encoders[i].transform(df[i].tolist())
+        else:
+            encoded_df[i] = df[i]
+
+    return encoded_df
