@@ -1,6 +1,8 @@
 from random import gauss
 from pandas import isnull, DataFrame
 from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def replace_NA_rand_gauss(column):
     mean_val = column.mean(skipna=True)
@@ -17,3 +19,15 @@ def scale_matrices(df_train, df_test):
     df_test = scaled_matrix.iloc[len(df_train):, :]
 
     return df_train, df_test
+
+def show_correlation_matrix(X, y):
+    sns.set(style="white")
+
+    df = X.copy()
+    df['SalePrice']=y
+    corr = df.corr()
+
+    plt.figure(figsize=(10,8))
+    ax = sns.heatmap(corr, vmax=1, square=True, annot=False ,fmt='.2f', cmap ='GnBu', cbar_kws={"shrink": .5}, robust=True, linewidths=.5)
+    plt.title('Correlation matrix between the features', fontsize=20)
+    plt.show()

@@ -1,10 +1,8 @@
 import numpy as np
 import pandas as pd
 from encode import build_feature_encoders, encode_df
-from utils import replace_NA_rand_gauss, scale_matrices
-from sklearn.linear_model import RidgeCV, LassoCV
-from sklearn.metrics import classification_report
-
+from utils import replace_NA_rand_gauss, scale_matrices, show_correlation_matrix
+from sklearn.ensemble import GradientBoostingRegressor
 
 def encode_remove_NA_train(df, encoders):
 
@@ -73,19 +71,16 @@ def main():
 
     X_train, X_test = scale_matrices(X_train, X_test)
 
-    lasso = LassoCV()
-    lasso.fit(X_train, y_train)
-    zero_coef_indices = list(filter(lambda x: x>=0, [i if lasso.coef_[i]==0 else -1 for i in range(len(lasso.coef_))]))
-    drop_labels = [X_train.columns[zero_coef_indices[i]] for i in range(len(zero_coef_indices))]
+    #show_correlation_matrix(X_train, y_train)
 
-    X_train_dropped = X_train.drop(labels=drop_labels, axis=1)
-    X_test_dropped = X_test.drop(labels=drop_labels, axis=1)
+    ensemble = GradientBoostingRegressor(max_depth=16, learning_rate=.08, min_samples_leaf=9,
+                                min_samples_split=9, n_estimators=300)
 
-    ridge = RidgeCV()
-    ridge.fit(X_train_dropped, y_train)
-    y_predict = ridge.predict(X = X_test_dropped)
+    ensemble.fit(X_train, y_train)
+    prediction = ensemble.predict(X_test)
+    print("Score: ", ensemble.score(X_train, y_train))
 
-    for i in y_predict:
+    for i in prediction:
         print(i)
 
 
