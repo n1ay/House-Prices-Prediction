@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 from encode import build_feature_encoders, encode_df
 from utils import replace_NA_rand_gauss, replace_NA_rand_uniform, scale_matrices, show_correlation_matrix
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.model_selection import GridSearchCV
-from sklearn.utils import shuffle
+
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+from keras.optimizers import Adadelta
 
 def encode_remove_NA_train(df, encoders, method):
 
@@ -66,31 +67,34 @@ def encode_remove_NA_test(df, encoders, method):
 
 
 def main():
-    encoders = build_feature_encoders()
-    method = replace_NA_rand_uniform
-	
-    X_train, y_train = encode_remove_NA_train(pd.read_csv('data/train.csv'), encoders, method)
-    X_test = encode_remove_NA_test(pd.read_csv('data/test.csv'), encoders, method)
+	encoders = build_feature_encoders()
+	method = replace_NA_rand_uniform
 
-    X_train, X_test = scale_matrices(X_train, X_test)    
+	X_train, y_train = encode_remove_NA_train(pd.read_csv('data/train.csv'), encoders, method)
+	X_test = encode_remove_NA_test(pd.read_csv('data/test.csv'), encoders, method)
 
-    #show_correlation_matrix(X_train, y_train)
+	X_train, X_test = scale_matrices(X_train, X_test)
 
-    grid_search = GridSearchCV(estimator=GradientBoostingRegressor(), cv=5, param_grid={
-        'max_depth': [8],
-        'learning_rate': [0.1],
-        'min_samples_leaf': [9],
-        'min_samples_split': [9],
-        'n_estimators': [400],
-    }, n_jobs=4, pre_dispatch=8)
+	#show_correlation_matrix(X_train, y_train)
 
-    grid_search.fit(X_train, y_train)
-    prediction = grid_search.predict(X_test)
-    print("Best estimator: ", grid_search.best_estimator_)
-    print("Best estimator score:", grid_search.score(X_train, y_train))
+	X_train = X_train.values.reshape((1460, 80))
+	y_train = y_train.values.reshape((1460, 1))
+	X_test = X_test.values.reshape((1459, 80))
 
-    for i in prediction:
-        print(i)
+	model = Sequential()
+	model.add(Dense(300, activation='relu', input_dim=80))
+	model.add(Dropout(0.25))
+	model.add(Dense(700, activation='relu'))
+	model.add(Dropout(0.2))
+	model.add(Dense(500, activation='relu'))
+	model.add(Dense(1, activation='relu'))
+
+	model.compile(loss='mean_squared_error', optimizer=Adadelta(), metrics=['accuracy'])
+	model.fit(x=X_train, y=y_train, batch_size=1, shuffle=True, epochs=15, verbose=2)
+	prediction = model.predict(x=X_test)
+
+	for i in prediction:
+		print(i)
 
 if __name__ == "__main__":
     main()

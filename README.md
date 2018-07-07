@@ -12,7 +12,7 @@ Ask a home buyer to describe their dream house, and they probably won't begin wi
   1. Encoding all non-numeric values to numeric using LabelEncoder
   2. Replacement of all NA/NaN using gaussian random
   3. Normalization (0-1 min-max scaling)
-  4. AdaBoostRegressor with GradientBoostingRegressor (depth=16) fit & predict
+  4. Keras NN fit & predict
   
 ## Possibilities of performance enhancement:
   - Finding best fitting model with k-folding
