@@ -5,7 +5,7 @@ from utils import replace_NA_rand_gauss, replace_NA_rand_uniform, scale_matrices
 
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
-from keras.optimizers import Adadelta
+from keras.optimizers import Adadelta, SGD, Adam
 
 def encode_remove_NA_train(df, encoders, method):
 
@@ -82,15 +82,15 @@ def main():
 	X_test = X_test.values.reshape((1459, 80))
 
 	model = Sequential()
-	model.add(Dense(300, activation='relu', input_dim=80))
+	model.add(Dense(160, activation='relu', input_dim=80))
 	model.add(Dropout(0.25))
-	model.add(Dense(700, activation='relu'))
-	model.add(Dropout(0.2))
-	model.add(Dense(500, activation='relu'))
+	model.add(Dense(240, activation='relu'))
+	model.add(Dropout(0.25))
+	model.add(Dense(120, activation='relu'))
 	model.add(Dense(1, activation='relu'))
 
-	model.compile(loss='mean_squared_error', optimizer=Adadelta(), metrics=['accuracy'])
-	model.fit(x=X_train, y=y_train, batch_size=1, shuffle=True, epochs=15, verbose=2)
+	model.compile(loss='mean_squared_error', optimizer=Adam(), metrics=[])
+	model.fit(x=X_train, y=y_train, batch_size=1, shuffle=True, epochs=20, verbose=1)
 	prediction = model.predict(x=X_test)
 
 	for i in prediction:

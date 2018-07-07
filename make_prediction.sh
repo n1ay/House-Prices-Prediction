@@ -3,10 +3,10 @@ PRICES_FILE='SalePrices.txt'
 ID_FILE='Id.txt'
 SUBMISSION_FILE='submission.csv'
 
-regexp="(score)|(best estimator)|(=)"
+regexp="(score)|(best estimator)|(=)|(loss)|(acc)|(epoch)"
 
 echo "SalePrice" > $PRICES_FILE
-result=$(python3.5 -O main.py)
+result=$(python3.5 -O main.py | sed 's/\[ //g' | sed 's/\]//g')
 echo "$result" | egrep -iv "(^$)|$regexp" >> $PRICES_FILE
 cat data/sample_submission.csv | awk -F"," '{ print $1 }' > $ID_FILE
 paste $ID_FILE $PRICES_FILE -d "," > $SUBMISSION_FILE
