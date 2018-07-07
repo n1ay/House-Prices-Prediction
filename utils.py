@@ -1,4 +1,4 @@
-from random import gauss
+from random import gauss, uniform
 from pandas import isnull, DataFrame
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
@@ -8,6 +8,11 @@ def replace_NA_rand_gauss(column):
     mean_val = column.mean(skipna=True)
     std_val = column.std(skipna=True)
     return column.apply(lambda x: gauss(mean_val, std_val) if isnull(x) else x)
+    
+def replace_NA_rand_uniform(column):
+	min_val = column.min(skipna=True)
+	max_val = column.max(skipna=True)
+	return column.apply(lambda x: uniform(min_val, max_val) if isnull(x) else x)
 
 def scale_matrices(df_train, df_test):
     scaler = MinMaxScaler(copy=False)
