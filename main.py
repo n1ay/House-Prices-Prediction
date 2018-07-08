@@ -68,7 +68,7 @@ def encode_remove_NA_test(df, encoders, method):
 
 def main():
 	encoders = build_feature_encoders()
-	method = replace_NA_rand_uniform
+	method = replace_NA_rand_gauss
 
 	X_train, y_train = encode_remove_NA_train(pd.read_csv('data/train.csv'), encoders, method)
 	X_test = encode_remove_NA_test(pd.read_csv('data/test.csv'), encoders, method)
@@ -82,11 +82,11 @@ def main():
 	X_test = X_test.values.reshape((1459, 80))
 
 	model = Sequential()
-	model.add(Dense(160, activation='relu', input_dim=80))
-	model.add(Dropout(0.25))
-	model.add(Dense(240, activation='relu'))
-	model.add(Dropout(0.25))
-	model.add(Dense(120, activation='relu'))
+	model.add(Dense(320, activation='relu', input_dim=80))
+	model.add(Dropout(0.1))
+	model.add(Dense(1280, activation='relu'))
+	model.add(Dropout(0.1))
+	model.add(Dense(640, activation='relu'))
 	model.add(Dense(1, activation='relu'))
 
 	model.compile(loss='mean_squared_error', optimizer=Adam(), metrics=[])
